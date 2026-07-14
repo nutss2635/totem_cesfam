@@ -1,53 +1,38 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --azul-900: #063a54;
+  --azul-800: #0a4d6e;
+  --azul-700: #0e6a94;
+  --azul-600: #1584b3;
+  --azul-500: #2ba3d1;
+  --celeste-300: #7ecbe8;
+  --celeste-200: #b3e0f2;
+  --celeste-100: #dff2fa;
+  --celeste-50: #f2fbfe;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --texto: var(--azul-900);
+  --texto-suave: var(--azul-700);
+  --fondo: var(--celeste-50);
+  --superficie: #ffffff;
+  --borde: var(--celeste-200);
 
+  --exito: #1a9e6e;
+  --alerta: #c0392b;
+
+  --sans: 'Segoe UI', system-ui, Roboto, sans-serif;
+  --sombra: 0 10px 25px -8px rgba(6, 58, 84, 0.25);
+
+  color-scheme: light;
+  color: var(--texto);
+  background: var(--fondo);
   font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
@@ -55,57 +40,477 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
+h2,
+h3 {
+  font-weight: 600;
+  color: var(--azul-900);
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+button {
+  font: inherit;
+  cursor: pointer;
 }
 
-code {
+input,
+select {
+  font: inherit;
+}
+
+/* ---------- layout compartido ---------- */
+
+.pantalla {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background: var(--azul-800);
+  color: #fff;
+}
+
+.encabezado img.logo {
+  height: 48px;
+  width: auto;
+}
+
+.encabezado h1 {
+  color: #fff;
+  font-size: 22px;
+}
+
+.encabezado nav {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
+.encabezado nav a {
+  color: var(--celeste-100);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.encabezado nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.contenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  gap: 24px;
+  text-align: center;
+}
+
+.activar-sonido {
+  margin: 16px auto 0;
+}
+
+.bienvenida {
+  font-size: 32px;
+  margin-bottom: -8px;
+}
+
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  box-shadow: var(--sombra);
+  padding: 32px;
+  width: min(480px, 100%);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.campo label {
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+.campo input {
+  padding: 12px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+.campo input:focus {
+  outline: 2px solid var(--azul-500);
+  outline-offset: 1px;
+}
+
+.campo-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 10px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  transition: filter 0.15s, transform 0.05s;
+}
+
+.boton:active {
+  transform: translateY(1px);
+}
+
+.boton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.boton-primario {
+  background: var(--azul-700);
+  color: #fff;
+  width: 100%;
+}
+
+.boton-primario:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.boton-secundario {
+  background: var(--celeste-100);
+  color: var(--azul-800);
+}
+
+.boton-secundario:hover:not(:disabled) {
+  background: var(--celeste-200);
+}
+
+.boton-peligro {
+  background: #fdecea;
+  color: var(--alerta);
+}
+
+.boton-peligro:hover:not(:disabled) {
+  background: #f8d3cf;
+}
+
+.error {
+  color: var(--alerta);
+  font-size: 14px;
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
+
+/* ---------- ticket grande (tótem) ---------- */
+
+.ticket {
+  background: var(--azul-700);
+  color: #fff;
+  border-radius: 20px;
+  padding: 48px;
+  width: min(420px, 100%);
+}
+
+.ticket .tipo {
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--celeste-200);
+}
+
+.ticket .nombre {
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 4px 0 0;
+}
+
+.ticket .numero {
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 12px 0;
+}
+
+/* ---------- pantalla de sala ---------- */
+
+.sala {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 32px;
+}
+
+.sala-llamando {
+  grid-column: 1 / -1;
+  background: var(--azul-700);
+  color: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+}
+
+.sala-llamando .nombre {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.sala-llamando .casilla {
+  font-size: 24px;
+  color: var(--celeste-100);
+}
+
+.sala-columna h2 {
+  color: var(--azul-800);
+  border-bottom: 2px solid var(--celeste-200);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.sala-fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.sala-fila .numero {
+  font-weight: 700;
+  color: var(--azul-700);
+}
+
+.vacio {
+  color: var(--texto-suave);
+  font-style: italic;
+  padding: 12px;
+}
+
+/* ---------- panel funcionario ---------- */
+
+.panel {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  padding: 32px;
+  text-align: left;
+}
+
+.panel-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel-actual {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.panel-actual .numero {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--azul-700);
+}
+
+.panel-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.panel-cola h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--celeste-100);
+  color: var(--azul-800);
+}
+
+/* ---------- tótem: pantalla de ingreso ---------- */
+
+.totem {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--fondo);
+}
+
+.totem-hero {
+  position: relative;
+  background: linear-gradient(160deg, var(--azul-900), var(--azul-700));
+  color: #fff;
+  padding: 28px 32px 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.totem-nav {
+  position: absolute;
+  top: 22px;
+  right: 28px;
+  display: flex;
+  gap: 10px;
+}
+
+.totem-nav a {
+  color: var(--celeste-100);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.totem-nav a:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.totem-logo-halo {
+  width: 136px;
+  height: 136px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 14px 32px -8px rgba(4, 30, 46, 0.6);
+  margin: 32px 0 12px;
+}
+
+.totem-logo-halo img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.totem-hero h1 {
+  color: #fff;
+  font-size: 34px;
+  letter-spacing: -0.4px;
+}
+
+.totem-subtitulo {
+  color: var(--celeste-100);
   font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 4px 0 0;
+}
+
+.totem-contenido {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 56px;
+  margin-top: -72px;
+}
+
+.totem-card {
+  background: var(--superficie);
+  border-radius: 20px;
+  box-shadow: var(--sombra);
+  padding: 40px;
+  width: min(440px, 100%);
+  height: fit-content;
+  text-align: center;
+}
+
+.totem-card h2 {
+  font-size: 26px;
+}
+
+.totem-ayuda {
+  color: var(--texto-suave);
+  margin: 8px 0 28px;
+}
+
+.totem-card .campo input {
+  font-size: 24px;
+  padding: 18px 16px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.boton-grande {
+  width: 100%;
+  padding: 18px 24px;
+  font-size: 20px;
+}
+
+@media (max-width: 640px) {
+  .totem-hero {
+    padding: 20px 20px 88px;
+  }
+
+  .totem-nav {
+    position: static;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .totem-logo-halo {
+    width: 108px;
+    height: 108px;
+    margin: 12px 0 8px;
+  }
+
+  .totem-logo-halo img {
+    width: 78px;
+    height: 78px;
+  }
+
+  .totem-hero h1 {
+    font-size: 26px;
+  }
 }
