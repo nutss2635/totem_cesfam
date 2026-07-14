@@ -1,12 +1,15 @@
+const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('../db/connection');
 const { Casilla } = require('./entities');
+const { init: initSocket } = require('./socket');
 const pacientesRouter = require('./routes/pacientes');
 const ticketsRouter = require('./routes/tickets');
 const casillasRouter = require('./routes/casillas');
 
 const app = express();
+const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
@@ -36,7 +39,9 @@ async function main() {
     console.log('✔ Casillas iniciales creadas');
   }
 
-  app.listen(3000, () => console.log('✔ Server en http://localhost:3000'));
+  initSocket(server);
+
+  server.listen(3000, () => console.log('✔ Server en http://localhost:3000'));
 }
 
 main().catch(err => console.error('Error al iniciar:', err.message));
