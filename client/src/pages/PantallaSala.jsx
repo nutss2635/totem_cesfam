@@ -19,7 +19,11 @@ function anunciar(ticket) {
 
 function formatearHora(iso) {
   if (!iso) return '—';
-  return new Date(iso).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+  return new Date(iso).toLocaleTimeString('es-CL', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'America/Santiago',
+  });
 }
 
 export default function PantallaSala() {
