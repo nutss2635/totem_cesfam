@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import Encabezado from '../components/Encabezado.jsx';
 import { api } from '../api.js';
 import { socket } from '../socket.js';
+import { useTitulo } from '../lib/useTitulo.js';
 
 export default function PanelFuncionario() {
+  useTitulo('Panel funcionario');
   const [casillas, setCasillas] = useState([]);
   const [casillaId, setCasillaId] = useState('');
   const [cola, setCola] = useState([]);

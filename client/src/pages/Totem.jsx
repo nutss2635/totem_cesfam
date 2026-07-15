@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
-import { normalizarRut } from '../lib/rut.js';
+import { normalizarRut, formatearRutInput } from '../lib/rut.js';
+import { useTitulo } from '../lib/useTitulo.js';
 
 export default function Totem() {
+  useTitulo('Tótem');
   const [rut, setRut] = useState('');
   const [ticket, setTicket] = useState(null);
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(false);
+  const timeoutRef = useRef(null);
 
   function reiniciar() {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setRut('');
     setTicket(null);
     setError('');
@@ -23,7 +27,7 @@ export default function Totem() {
     try {
       const nuevoTicket = await api.crearTicket(normalizarRut(rut));
       setTicket(nuevoTicket);
-      setTimeout(reiniciar, 8000);
+      timeoutRef.current = setTimeout(reiniciar, 8000);
     } catch (err) {
       if (err.status === 404) {
         setError('No encontramos tu RUT en el sistema. Acércate a mesón para que te ayuden.');
@@ -46,7 +50,7 @@ export default function Totem() {
           <img src="/logo-cesfam.png" alt="CESFAM Tucapel" />
         </div>
         <h1>CESFAM Tucapel</h1>
-        <p className="totem-subtitulo">Farmacia · Tótem de atención a pacientes</p>
+        <p className="totem-subtitulo">Tótem de atención a pacientes · Farmacia</p>
       </div>
 
       <div className="totem-contenido">
@@ -61,7 +65,7 @@ export default function Totem() {
                 autoFocus
                 placeholder="12345678-9"
                 value={rut}
-                onChange={(e) => setRut(e.target.value)}
+                onChange={(e) => setRut(formatearRutInput(e.target.value))}
               />
             </div>
             {error && <p className="error">{error}</p>}
@@ -70,13 +74,14 @@ export default function Totem() {
             </button>
           </form>
         ) : (
-          <div className="ticket">
+          <div className="ticket" onClick={reiniciar} role="button" tabIndex={0}>
             <p className="tipo">{ticket.tipo === 'P' ? 'Atención preferencial' : 'Atención general'}</p>
             <p className="nombre">{ticket.Paciente.nombre}</p>
             <p className="numero">
               {ticket.tipo}-{ticket.numero}
             </p>
             <p>Te llamaremos cuando sea tu turno</p>
+            <p className="ticket-ayuda">Toca la pantalla para continuar</p>
           </div>
         )}
       </div>

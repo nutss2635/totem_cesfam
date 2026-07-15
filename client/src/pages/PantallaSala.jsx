@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import Encabezado from '../components/Encabezado.jsx';
 import { api } from '../api.js';
 import { socket } from '../socket.js';
+import { useTitulo } from '../lib/useTitulo.js';
+
+const MAX_HISTORIAL = 6;
 
 function anunciar(ticket) {
   if (!('speechSynthesis' in window)) return;
@@ -13,33 +16,39 @@ function anunciar(ticket) {
   window.speechSynthesis.speak(utterancia);
 }
 
+function formatearHora(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+}
+
 export default function PantallaSala() {
-  const [cola, setCola] = useState([]);
+  useTitulo('Pantalla de sala');
   const [llamando, setLlamando] = useState(null);
+  const [historial, setHistorial] = useState([]);
   const [sonidoActivado, setSonidoActivado] = useState(false);
   const sonidoActivadoRef = useRef(false);
 
   useEffect(() => {
-    function refrescar() {
-      api.listarCola().then(setCola).catch(() => {});
-    }
-
-    refrescar();
+    // Si la pantalla se recarga a mitad de turno, recupera los últimos llamados ya hechos.
+    api
+      .listarCola('llamado')
+      .then((llamados) => {
+        const ordenados = [...llamados].sort((a, b) => new Date(b.llamadoAt) - new Date(a.llamadoAt));
+        setHistorial(ordenados.slice(0, MAX_HISTORIAL));
+        setLlamando(ordenados[0] ?? null);
+      })
+      .catch(() => {});
 
     function onLlamado(ticket) {
       setLlamando(ticket);
       if (sonidoActivadoRef.current) anunciar(ticket);
-      refrescar();
+      setHistorial((prev) => [ticket, ...prev.filter((t) => t.id !== ticket.id)].slice(0, MAX_HISTORIAL));
     }
 
-    socket.on('ticket:creado', refrescar);
     socket.on('ticket:llamado', onLlamado);
-    socket.on('ticket:actualizado', refrescar);
 
     return () => {
-      socket.off('ticket:creado', refrescar);
       socket.off('ticket:llamado', onLlamado);
-      socket.off('ticket:actualizado', refrescar);
     };
   }, []);
 
@@ -49,9 +58,6 @@ export default function PantallaSala() {
     sonidoActivadoRef.current = true;
     setSonidoActivado(true);
   }
-
-  const generales = cola.filter((t) => t.tipo === 'G' && t.estado === 'en_espera');
-  const preferenciales = cola.filter((t) => t.tipo === 'P' && t.estado === 'en_espera');
 
   return (
     <div className="pantalla">
@@ -74,30 +80,36 @@ export default function PantallaSala() {
           )}
         </div>
 
-        <div className="sala-columna">
-          <h2>Atención general</h2>
-          {generales.length === 0 && <p className="vacio">Sin pacientes en espera</p>}
-          {generales.map((t) => (
-            <div className="sala-fila" key={t.id}>
-              <span className="numero">
-                {t.tipo}-{t.numero}
-              </span>
-              <span>{t.Paciente.nombre}</span>
+        <div className="sala-historial">
+          <h2>Últimos llamados</h2>
+          {historial.length === 0 ? (
+            <p className="vacio">Aún no hay llamados</p>
+          ) : (
+            <div className="tabla-historial-wrap">
+              <table className="tabla-historial">
+                <thead>
+                  <tr>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Casilla</th>
+                    <th>Hora</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historial.map((t) => (
+                    <tr key={t.id}>
+                      <td className="numero">
+                        {t.tipo}-{t.numero}
+                      </td>
+                      <td>{t.Paciente.nombre}</td>
+                      <td>{t.Casilla?.nombre ?? '—'}</td>
+                      <td>{formatearHora(t.llamadoAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          ))}
-        </div>
-
-        <div className="sala-columna">
-          <h2>Atención preferencial</h2>
-          {preferenciales.length === 0 && <p className="vacio">Sin pacientes en espera</p>}
-          {preferenciales.map((t) => (
-            <div className="sala-fila" key={t.id}>
-              <span className="numero">
-                {t.tipo}-{t.numero}
-              </span>
-              <span>{t.Paciente.nombre}</span>
-            </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

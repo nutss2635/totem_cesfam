@@ -237,6 +237,15 @@ select {
   border-radius: 20px;
   padding: 48px;
   width: min(420px, 100%);
+  text-align: center;
+  cursor: pointer;
+}
+
+.ticket .ticket-ayuda {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--celeste-200);
+  opacity: 0.85;
 }
 
 .ticket .tipo {
@@ -264,14 +273,13 @@ select {
 
 .sala {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 24px;
   padding: 32px;
 }
 
 .sala-llamando {
-  grid-column: 1 / -1;
   background: var(--azul-700);
   color: #fff;
   border-radius: 20px;
@@ -288,13 +296,6 @@ select {
 .sala-llamando .casilla {
   font-size: 24px;
   color: var(--celeste-100);
-}
-
-.sala-columna h2 {
-  color: var(--azul-800);
-  border-bottom: 2px solid var(--celeste-200);
-  padding-bottom: 8px;
-  margin-bottom: 12px;
 }
 
 .sala-fila {
@@ -317,6 +318,50 @@ select {
   color: var(--texto-suave);
   font-style: italic;
   padding: 12px;
+}
+
+.sala-historial h2 {
+  color: var(--azul-800);
+  border-bottom: 2px solid var(--celeste-200);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.tabla-historial-wrap {
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--superficie);
+}
+
+.tabla-historial {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-historial th,
+.tabla-historial td {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 17px;
+}
+
+.tabla-historial thead {
+  background: var(--celeste-100);
+  color: var(--azul-800);
+}
+
+.tabla-historial tbody tr:not(:last-child) {
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla-historial tbody tr:nth-child(even) {
+  background: var(--celeste-50);
+}
+
+.tabla-historial td.numero {
+  font-weight: 700;
+  color: var(--azul-700);
 }
 
 /* ---------- panel funcionario ---------- */
