@@ -1,4 +1,4 @@
-# Tótem CESFAM Tucapel
+# Tótem CESFAM 
 
 Sistema de gestión de turnos para la recepción de farmacia de un CESFAM, compuesto por un tótem de autoatención, una pantalla de sala con anuncios por voz y un panel para el funcionario de farmacia.
 
