@@ -83,7 +83,10 @@ select {
 
 .encabezado img.logo {
   height: 48px;
-  width: auto;
+  width: 48px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
 }
 
 .encabezado h1 {
@@ -459,20 +462,20 @@ select {
 }
 
 .totem-logo-halo {
-  width: 136px;
-  height: 136px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 14px 32px -8px rgba(4, 30, 46, 0.6);
-  margin: 32px 0 12px;
+  margin: 24px 0 12px;
 }
 
 .totem-logo-halo img {
-  width: 100px;
-  height: 100px;
+  width: 220px;
+  height: 220px;
   object-fit: contain;
   border-radius: 50%;
 }
@@ -545,14 +548,14 @@ select {
   }
 
   .totem-logo-halo {
-    width: 108px;
-    height: 108px;
+    width: 250px;
+    height: 250px;
     margin: 12px 0 8px;
   }
 
   .totem-logo-halo img {
-    width: 78px;
-    height: 78px;
+    width: 250px;
+    height: 250px;
   }
 
   .totem-hero h1 {

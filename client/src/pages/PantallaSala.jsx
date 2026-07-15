@@ -8,8 +8,9 @@ const MAX_HISTORIAL = 6;
 
 function anunciar(ticket) {
   if (!('speechSynthesis' in window)) return;
+  const tipoTexto = ticket.tipo === 'P' ? 'atención preferencial' : 'atención general';
   const casilla = ticket.Casilla?.nombre ?? 'su atención';
-  const texto = `${ticket.Paciente.nombre}, acercarse a ${casilla}`;
+  const texto = `${ticket.Paciente.nombre}, acercarse a ${tipoTexto} ${casilla}`;
   const utterancia = new SpeechSynthesisUtterance(texto);
   utterancia.lang = 'es-CL';
   window.speechSynthesis.cancel();
@@ -71,7 +72,9 @@ export default function PantallaSala() {
         <div className="sala-llamando">
           {llamando ? (
             <>
-              <p className="tipo">Llamando ahora</p>
+              <p className="tipo">
+                Llamando ahora · {llamando.tipo === 'P' ? 'Atención preferencial' : 'Atención general'}
+              </p>
               <p className="nombre">{llamando.Paciente.nombre}</p>
               <p className="casilla">{llamando.Casilla?.nombre ?? '—'}</p>
             </>
