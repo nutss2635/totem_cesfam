@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
   const { rut } = req.body;
   if (!rut) return res.status(400).json({ error: 'rut es obligatorio' });
 
-  const paciente = await Paciente.findOne({ where: { rut } });
+  const paciente = await Paciente.buscarPorRut(rut);
   if (!paciente) {
     return res.status(404).json({ error: 'Paciente no registrado' });
   }

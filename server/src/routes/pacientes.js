@@ -5,7 +5,7 @@ const router = Router();
 
 // GET /api/pacientes/:rut — el tótem consulta si el paciente ya está registrado
 router.get('/:rut', async (req, res) => {
-  const paciente = await Paciente.findOne({ where: { rut: req.params.rut } });
+  const paciente = await Paciente.buscarPorRut(req.params.rut);
   if (!paciente) return res.status(404).json({ error: 'Paciente no encontrado' });
   res.json(paciente);
 });
