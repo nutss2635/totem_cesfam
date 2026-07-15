@@ -32,9 +32,9 @@ async function main() {
   const total = await Casilla.count();
   if (total === 0) {
     await Casilla.bulkCreate([
-      { nombre: 'Atención General 1', tipo: 'G' },
-      { nombre: 'Atención General 2', tipo: 'G' },
-      { nombre: 'Atención Preferencial 1', tipo: 'P' },
+      { nombre: 'Casilla 1' },
+      { nombre: 'Casilla 2' },
+      { nombre: 'Casilla 3' },
     ]);
     console.log('✔ Casillas iniciales creadas');
   }
