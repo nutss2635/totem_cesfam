@@ -22,7 +22,8 @@ async function request(path, options = {}) {
 export const api = {
   buscarPaciente: (rut) => request(`/pacientes/${encodeURIComponent(rut)}`),
   crearPaciente: (paciente) => request('/pacientes', { method: 'POST', body: JSON.stringify(paciente) }),
-  crearTicket: (rut) => request('/tickets', { method: 'POST', body: JSON.stringify({ rut }) }),
+  crearTicket: (rut, pacienteId) =>
+    request('/tickets', { method: 'POST', body: JSON.stringify({ rut, pacienteId }) }),
   listarCola: (estado) => request(`/tickets${estado ? `?estado=${estado}` : ''}`),
   listarCasillas: () => request('/casillas'),
   llamar: (id, casillaId) => request(`/tickets/${id}/llamar`, { method: 'PATCH', body: JSON.stringify({ casillaId }) }),

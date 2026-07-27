@@ -1,6 +1,6 @@
 const { faker } = require('@faker-js/faker/locale/es');
 const sequelize = require('./connection');
-const { Paciente } = require('../src/entities');
+const { Paciente, VinculoApoderado } = require('../src/entities');
 
 // Dígito verificador con módulo 11
 function dv(rutNum) {
@@ -39,6 +39,25 @@ async function seed() {
   await Paciente.bulkCreate(pacientes);
 
   console.log('✔ 30 pacientes simulados insertados');
+
+  // Vínculo de prueba: un apoderado (adulto, sin preferencial propia) a cargo
+  // de un dependiente con discapacidad, para probar la pregunta "¿es para ti o para X?".
+  const apoderado = await Paciente.create({
+    rut: rutAleatorio(),
+    nombre: 'Pedro Soto Rojas',
+    fechaNacimiento: faker.date.birthdate({ min: 30, max: 45, mode: 'age' }),
+    atencionPreferencial: false,
+  });
+  const dependiente = await Paciente.create({
+    rut: rutAleatorio(),
+    nombre: 'Valentina Soto Rojas',
+    fechaNacimiento: faker.date.birthdate({ min: 15, max: 25, mode: 'age' }),
+    atencionPreferencial: true, // discapacidad registrada
+  });
+  await VinculoApoderado.create({ apoderadoId: apoderado.id, dependienteId: dependiente.id });
+
+  console.log(`✔ Vínculo de prueba creado: apoderado ${apoderado.rut} → dependiente ${dependiente.rut} (${dependiente.nombre}, preferencial)`);
+
   await sequelize.close();
 }
 

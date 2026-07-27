@@ -4,10 +4,14 @@ const { Paciente } = require('../entities');
 const router = Router();
 
 // GET /api/pacientes/:rut — el tótem consulta si el paciente ya está registrado
+// y de quién es apoderado, para preguntar si la atención es para él o para un dependiente
 router.get('/:rut', async (req, res) => {
   const paciente = await Paciente.buscarPorRut(req.params.rut);
   if (!paciente) return res.status(404).json({ error: 'Paciente no encontrado' });
-  res.json(paciente);
+  const conDependientes = await paciente.reload({
+    include: [{ model: Paciente, as: 'Dependientes', attributes: ['id', 'nombre'] }],
+  });
+  res.json(conDependientes);
 });
 
 // POST /api/pacientes — registro cuando el RUT no existe todavía

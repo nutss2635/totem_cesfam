@@ -24,14 +24,25 @@ router.get('/', async (req, res) => {
   res.json(tickets);
 });
 
-// POST /api/tickets — el tótem emite un ticket clasificando automáticamente al paciente
+// POST /api/tickets — el tótem emite un ticket clasificando automáticamente al paciente.
+// Si quien ingresa el RUT es apoderado de alguien, `pacienteId` indica para quién es
+// la atención (él mismo o uno de sus dependientes); se valida el vínculo igual.
 router.post('/', async (req, res) => {
-  const { rut } = req.body;
+  const { rut, pacienteId } = req.body;
   if (!rut) return res.status(400).json({ error: 'rut es obligatorio' });
 
-  const paciente = await Paciente.buscarPorRut(rut);
-  if (!paciente) {
+  const solicitante = await Paciente.buscarPorRut(rut);
+  if (!solicitante) {
     return res.status(404).json({ error: 'Paciente no registrado' });
+  }
+
+  let paciente = solicitante;
+  if (pacienteId && Number(pacienteId) !== solicitante.id) {
+    const dependiente = await solicitante.getDependientes({ where: { id: pacienteId } });
+    if (!dependiente.length) {
+      return res.status(400).json({ error: 'pacienteId no corresponde a un dependiente de este RUT' });
+    }
+    paciente = dependiente[0];
   }
 
   const tipo = esAtencionPreferencial(paciente) ? 'P' : 'G';
